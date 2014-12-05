@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Gomez Shopping Cart v2.0</title>
+<link href="templates/green/gsc.css" rel="stylesheet" type="text/css" />
+<link href="templates/green/style.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="templates/green/wordcloud.css" type="text/css"> 
+<!--[if IE]>
+<link href="templates/green/ie.css" rel="stylesheet" type="text/css" />
+<![endif]-->
+<script language="javascript" type="text/javascript" src="templates/green/forms/niceforms.js"></script>
+<link rel="stylesheet" type="text/css" media="all" href="templates/green/forms/niceforms-default.css" />
+<link rel="shorcut icon" href="favicon.ico">
+</head>
+
+<body class="thrColLiqHdr">
+
+<div id="container">
+ <div id="header">
+    <p><img src="templates/green/images/banner_logo.png" /></p>
+  <!-- end #header --></div>
+  <div id="sidebar1">
+  <h3>Home </h3>
+    <?php links(); ?>
+    <h3>Categories</h3>
+    <p><?php categories(); ?></p>
+    <div id="tags">
+    <div id="tags_title">Nube de Tags</div>
+    <div id="tags_content">
+    <?php tags(); ?>
+    </div>
+    </div>
+  <!-- end #sidebar1 --></div>
+  <div id="sidebar2">
+      <h3>Basket</h3>
+      <?php basket(); ?>
+  <!-- end #sidebar2 --></div>
+  <div id="mainContent">
+    <!--<h1> Shopping Cart </h1>-->
+    <?php shop(); ?></p>
+	<!-- end #mainContent --></div>
+	<!-- This clearing element should immediately follow the #mainContent div in order to force the #container div to contain all child floats --><br class="clearfloat" />
+  <div id="footer">
+    <p><?php footer(); ?></p>
+  <!-- end #footer --></div>
+<!-- end #container --></div>
+</body>
+</html>

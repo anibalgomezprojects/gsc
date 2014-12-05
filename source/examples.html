@@ -1,0 +1,754 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<title>ricocheting.com - PHP MySQL wrapper</title>
+
+
+<style type="text/css">
+<!-- /* style sheet for easy layout */
+
+body {
+	font-size  :  10pt;
+    color  :  black;
+    font-family  :  verdana, arial, helvetica, san-serif;
+    background-color  :  white;
+	}
+
+td {
+	font-size : 10pt;
+	/*border : 1px #eeeeee solid;*/
+	}
+.debut {
+	border : 1px #990000 solid;
+	background-color : #cc6666;
+	font-weight : bold;
+	font-size  :  10pt;
+	}
+
+.entry {
+	background-color : white;
+	border :  1px #990000 solid;
+	border-collapse : collapse;
+	}
+
+
+.linenum{
+	text-align:right;
+	background:#FDECE1;
+	border:1px solid #cc6666;
+	padding:0px 1px 0px 1px;
+	font-family:Courier New, Courier;
+	float:left;
+	width:17px;
+	margin:3px 0px 30px 0px;
+	}
+
+.linetext{
+	width:700px;
+	text-align:left;
+	background:white;
+	border:1px solid #cc6666;
+	border-left:0px;
+	padding:0px 1px 0px 8px;
+	font-family:Courier New, Courier;
+	float:left;
+	margin:3px 0px 30px 0px;
+	}
+
+code	{/* safari/konq hack */
+	font-family:Courier New, Courier;
+}
+
+br.clear	{
+	clear:both;
+}
+
+
+.code {
+	background:#FDECE1;
+	border:1px solid #cc6666;
+	padding:0px 4px 0px 4px;
+	font-family:Courier New, Courier;
+	font-size:10pt;
+	}
+
+// -->
+</style>
+
+
+</head>
+<body>
+
+
+
+<div class="pageMain">
+<!-- START main content -->
+<h2 class="shout">PHP MySQL wrapper</h2>
+
+
+<a name="description"><h4>Description</h4></a>
+<ul class="nospace">
+	<li>This is not a full script. This is the MySQL class that I use in all my PHP database projects. I run all my MySQL connections through it because it saves me time and space on my code. I don't have to keep typing the database information and other things like that. It also has shortcut functions because I got tired of escaping data, stripping slashes, building UGLY insert and update queries. I'm sharing this class along with some examples for using it.</li>
+</ul>
+
+
+
+<a name="files"><h4>Download</h4></a>
+<ul>
+	<li><a href="http://www.ricocheting.com/scripts/php_mysql_wrapper.php">Get the newest version</a></li>
+</ul>
+
+
+<a name="terms"><h4>Terms of Use</h4></a>
+<ul>
+	<li>Version 2.0.0 and onward is released under <a href="http://www.gnu.org/licenses/">GNU General Public License</a>. Basically this means you are free to use the script, modify it, and even redistribute versions of your own under the same license.</li>
+</ul>
+
+
+<h2>Instructions</h2>
+
+
+<a name="settings"><h4>Calling the Class, config settings</h4></a>
+<ul>
+	<li>At the top of your scripts:
+
+
+<div class="code">
+require("Database.class.php");<br>
+$db = new Database("<b>server_name</b>", "<b>mysql_user</b>", "<b>mysql_pass</b>", "<b>mysql_database</b>", "<b>table_prefix</b>");
+</div>
+
+	</li>
+
+	<li>What each setting means:<br>
+		<ul class="nospace">
+		<li><b class="code">server_name</b> - Name or IP of MySQL server. Usually "localhost" although sometimes it will be like "db1337.perfora.net"</li>
+		<li><b class="code">mysql_user</b> - User Name to log into MySQL database</li>
+		<li><b class="code">mysql_pass</b> - Password to log into MySQL database. If no password, use double quotes with a blank value. Example ""</li>
+
+		<li><b class="code">mysql_database</b> - Database to select and run the queries on</li>
+		<li><b class="code">table_prefix</b> - Table prefix is an OPTIONAL setting that I sometimes use to prefix all my tables for a project with a certain string. Example: I might set this to "bb_" for any tables created that deal with a bulletin board. Some cheap hosting plans and only have one database. Setting a table prefix will allow you to run multiple projects off a single database if each project has its own table prefix. If you want to use it, fill it in. If not, give it a blank value or simply don't fill in the last parameter</li>
+		</ul>
+
+	
+	</li>
+	<li>What I HIGHLY recommend (optional)<br>
+
+		The easiest way to handle this is to create a <b>config.inc.php</b> file. In it put:
+		<div class="code">//database server<br>
+		$config['server'] = "localhost";<br><br>
+
+		//database login name<br>
+		$config['user'] = "username";<br>
+
+		//database login password<br>
+		$config['pass'] = "password";<br><br>
+
+		//database name<br>
+		$config['database'] = "username_mydata";<br><br>
+
+		// table prefix<br>
+
+		$config['tablePrefix'] = "";<br>
+		</div><br>
+
+		Then at the top of your scripts, call in the config.inc.php and the database.class.php files
+		<div class="code">
+		require("config.inc.php");<br>
+		require("Database.class.php");<br>
+		$db =  new Database($config['server'], $config['user'], $config['pass'], $config['database'], $config['tablePrefix']);<br>
+
+		</div><br>
+
+		The reason why this is a good idea is because then if you change hosts etc, you can edit the single config.inc.php file, change the settings, and it is reflected on all your pages. No need to change the info on each of your pages.
+
+
+	</li>
+</ul>
+
+
+<h2>Examples of how to call things</h2>
+
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;every&nbsp;page&nbsp;needs&nbsp;to&nbsp;start&nbsp;with&nbsp;these&nbsp;basic&nbsp;things
+<br />
+<br />//&nbsp;I'm&nbsp;using&nbsp;a&nbsp;separate&nbsp;config&nbsp;file.&nbsp;so&nbsp;pull&nbsp;in&nbsp;those&nbsp;values
+
+<br /></span><span style="color: #007700">require(</span><span style="color: #DD0000">"config.inc.php"</span><span style="color: #007700">);
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;pull&nbsp;in&nbsp;the&nbsp;file&nbsp;with&nbsp;the&nbsp;database&nbsp;class
+<br /></span><span style="color: #007700">require(</span><span style="color: #DD0000">"database.class.php"</span><span style="color: #007700">);
+<br />
+
+<br /></span><span style="color: #FF8000">//&nbsp;create&nbsp;the&nbsp;$db&nbsp;ojbect
+<br /></span><span style="color: #0000BB">$db&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Database</span><span style="color: #007700">(</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'server'</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'user'</span><span style="color: #007700">],&nbsp;
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'pass'</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'database'</span><span style="color: #007700">],&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'tablePrefix'</span><span style="color: #007700">]);
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;connect&nbsp;to&nbsp;the&nbsp;server
+
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">();
+<br />
+<br /></span><span style="color: #FF8000">#####
+<br />//&nbsp;your&nbsp;main&nbsp;code&nbsp;would&nbsp;go&nbsp;here
+<br />#####
+<br />
+<br />//&nbsp;and&nbsp;you're&nbsp;done,&nbsp;remember&nbsp;to&nbsp;close&nbsp;connection
+
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">close</span><span style="color: #007700">();</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;update&nbsp;an&nbsp;existing&nbsp;record&nbsp;using&nbsp;query_update()
+<br />
+<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'count'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">3536</span><span style="color: #007700">;
+<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'ename'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"NULL"</span><span style="color: #007700">;</span><span style="color: #FF8000">//&nbsp;it&nbsp;knows&nbsp;to&nbsp;convert&nbsp;NULL&nbsp;and&nbsp;NOW()&nbsp;from&nbsp;a&nbsp;string
+
+<br />
+<br />//&nbsp;query_update()&nbsp;parameters
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table&nbsp;name&nbsp;(no&nbsp;prefix)
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assoc&nbsp;array&nbsp;with&nbsp;data&nbsp;(doesn't&nbsp;need&nbsp;escaped)
+
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where&nbsp;condition
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_update</span><span style="color: #007700">(</span><span style="color: #DD0000">"logs"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"url='google.com'"</span><span style="color: #007700">);
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;would&nbsp;create&nbsp;the&nbsp;query:
+
+<br />//&nbsp;UPDATE&nbsp;`logs`&nbsp;SET&nbsp;`count`='3536',&nbsp;`ename`=NULL&nbsp;WHERE&nbsp;url='google.com'</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;insert&nbsp;a&nbsp;new&nbsp;record&nbsp;using&nbsp;query_insert()
+<br />
+<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'count'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">;
+<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'ename'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"you're"</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;query_insert()&nbsp;will&nbsp;auto&nbsp;escape&nbsp;it&nbsp;for&nbsp;us
+
+<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'url'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #DD0000">"ricocheting.com"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;query_insert()&nbsp;parameters
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;table&nbsp;name&nbsp;(no&nbsp;prefix)
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assoc&nbsp;array&nbsp;with&nbsp;data&nbsp;(doesn't&nbsp;need&nbsp;escaped)
+
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_insert</span><span style="color: #007700">(</span><span style="color: #DD0000">"logs"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;would&nbsp;create&nbsp;the&nbsp;query:
+<br />//&nbsp;INSERT&nbsp;INTO&nbsp;`logs`&nbsp;(`count`,`ename`,`url`)&nbsp;VALUES&nbsp;('1',&nbsp;'your\'re',&nbsp;'ricocheting.com')</span>
+
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;escape()&nbsp;query()&nbsp;and&nbsp;fetch_array()
+<br />
+<br />//&nbsp;pullout&nbsp;the&nbsp;first&nbsp;10&nbsp;entries&nbsp;where&nbsp;url&nbsp;came&nbsp;from&nbsp;google
+
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;pre&nbsp;is&nbsp;my&nbsp;table&nbsp;prefix
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;escape()&nbsp;escapes&nbsp;string&nbsp;to&nbsp;make&nbsp;it&nbsp;safe&nbsp;for&nbsp;mysql
+
+<br />
+<br /></span><span style="color: #0000BB">$url&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"http://www.google.com/"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;id,&nbsp;url,&nbsp;count&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"logs
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;url&nbsp;LIKE&nbsp;'"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">escape</span><span style="color: #007700">(</span><span style="color: #0000BB">$url</span><span style="color: #007700">)&nbsp;.</span><span style="color: #DD0000">"%'
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER&nbsp;BY&nbsp;count&nbsp;DESC
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LIMIT&nbsp;0,10"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #0000BB">$countRows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);
+<br />
+<br />while&nbsp;(</span><span style="color: #0000BB">$countRow&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$countRows</span><span style="color: #007700">))&nbsp;{
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;tr&gt;&lt;td&gt;$countRow[id]&lt;/td&gt;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;$countRow[url]&lt;/td&gt;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;$countRow[count]&lt;/td&gt;&lt;/tr&gt;"</span><span style="color: #007700">;
+
+<br />}</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;using&nbsp;escape()&nbsp;and&nbsp;fetch_all_array()
+<br />
+<br />//&nbsp;pullout&nbsp;the&nbsp;first&nbsp;10&nbsp;entries&nbsp;where&nbsp;url&nbsp;came&nbsp;from&nbsp;google
+
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;pre&nbsp;is&nbsp;my&nbsp;table&nbsp;prefix
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;escape()&nbsp;escapes&nbsp;string&nbsp;to&nbsp;make&nbsp;it&nbsp;safe&nbsp;for&nbsp;mysql
+
+<br />
+<br /></span><span style="color: #0000BB">$url&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"http://www.google.com/"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;id,&nbsp;url,&nbsp;count&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"logs
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;url&nbsp;LIKE&nbsp;'"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">escape</span><span style="color: #007700">(</span><span style="color: #0000BB">$url</span><span style="color: #007700">)&nbsp;.</span><span style="color: #DD0000">"%'
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER&nbsp;BY&nbsp;count&nbsp;DESC
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LIMIT&nbsp;0,10"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;feed&nbsp;it&nbsp;the&nbsp;sql&nbsp;directly.&nbsp;it&nbsp;will&nbsp;return&nbsp;all&nbsp;records
+<br /></span><span style="color: #0000BB">$all_rows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_all_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);
+
+<br />
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;print&nbsp;out&nbsp;array&nbsp;later&nbsp;on&nbsp;when&nbsp;we&nbsp;need&nbsp;the&nbsp;info&nbsp;on&nbsp;the&nbsp;page
+<br /></span><span style="color: #007700">foreach(</span><span style="color: #0000BB">$all_rows&nbsp;</span><span style="color: #007700">as&nbsp;</span><span style="color: #0000BB">$key</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">$val</span><span style="color: #007700">){
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;tr&gt;&lt;td&gt;$val[id]&lt;/td&gt;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;$val[url]&lt;/td&gt;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;$val[count]&lt;/td&gt;&lt;/tr&gt;"</span><span style="color: #007700">;
+
+<br />}</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;using&nbsp;escape()&nbsp;query()&nbsp;and&nbsp;fetch_array()
+<br />
+<br />//&nbsp;sort&nbsp;by&nbsp;rank&nbsp;which&nbsp;is&nbsp;(premium*hits)&nbsp;from&nbsp;table
+
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;pre&nbsp;is&nbsp;my&nbsp;table&nbsp;prefix
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;escape()&nbsp;escapes&nbsp;my&nbsp;category&nbsp;string&nbsp;to&nbsp;make&nbsp;it&nbsp;safe&nbsp;for&nbsp;mysql
+
+<br />
+<br /></span><span style="color: #0000BB">$category&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">'Keyboard&nbsp;"THE&nbsp;GREAT"&nbsp;Typer'</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;id,&nbsp;ename,&nbsp;SUM(premium*hits)&nbsp;AS&nbsp;rank&nbsp;FROM&nbsp;"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">"logs
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;category='"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">escape</span><span style="color: #007700">(</span><span style="color: #0000BB">$category</span><span style="color: #007700">)&nbsp;.</span><span style="color: #DD0000">"'&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GROUP&nbsp;BY&nbsp;id&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER&nbsp;BY&nbsp;rank&nbsp;DESC"</span><span style="color: #007700">;
+
+<br />
+<br /></span><span style="color: #0000BB">$rankrows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);
+<br />
+<br />while&nbsp;(</span><span style="color: #0000BB">$rank_row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$rankrows</span><span style="color: #007700">))&nbsp;{
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;tr&gt;&lt;td&gt;$rank_row[id]&lt;/td&gt;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;$rank_row[ename]&lt;/td&gt;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;td&gt;$rank_row[rank]&lt;/td&gt;&lt;/tr&gt;"</span><span style="color: #007700">;
+
+<br />}</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;using&nbsp;query_first()&nbsp;
+<br />
+<br />//&nbsp;get&nbsp;patient's&nbsp;name&nbsp;using&nbsp;their&nbsp;unique&nbsp;ID
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;pre&nbsp;is&nbsp;my&nbsp;table&nbsp;prefix
+
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;first_name&nbsp;FROM&nbsp;"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">"medical
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;patient_id="</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$p_id&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">""</span><span style="color: #007700">;
+
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;since&nbsp;patient_id&nbsp;is&nbsp;unique,&nbsp;only&nbsp;one&nbsp;record&nbsp;needs&nbsp;returned
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I&nbsp;use&nbsp;$db-&gt;query_first()&nbsp;instead&nbsp;of&nbsp;$db-&gt;query()&nbsp;and&nbsp;fetch_array()
+
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$db-&gt;query_first()&nbsp;will&nbsp;return&nbsp;array&nbsp;with&nbsp;first&nbsp;record&nbsp;found
+<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_first</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);
+
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;since&nbsp;it&nbsp;only&nbsp;returned&nbsp;one&nbsp;record,&nbsp;i&nbsp;don't&nbsp;need&nbsp;to&nbsp;fetch.&nbsp;I&nbsp;can&nbsp;print&nbsp;off
+
+<br /></span><span style="color: #007700">echo&nbsp;</span><span style="color: #0000BB">$row</span><span style="color: #007700">[</span><span style="color: #DD0000">'first_name'</span><span style="color: #007700">];</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br /></div>
+<div class="linetext"><code><span style="color: #000000">
+
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;delete&nbsp;a&nbsp;specific&nbsp;entry
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"DELETE&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"news&nbsp;WHERE&nbsp;id=$my_id"</span><span style="color: #007700">;
+
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;updates/replaces&nbsp;if&nbsp;exists.&nbsp;adds&nbsp;if&nbsp;doesn't
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"REPLACE&nbsp;INTO&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"news&nbsp;VALUES&nbsp;(1,&nbsp;'first&nbsp;text'),(2,&nbsp;'second&nbsp;text');"</span><span style="color: #007700">;
+
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;using&nbsp;$db-&gt;affected_rows
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns&nbsp;the&nbsp;number&nbsp;of&nbsp;rows&nbsp;in&nbsp;a&nbsp;table&nbsp;affected&nbsp;by&nbsp;your&nbsp;query
+
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;after&nbsp;UPDATE&nbsp;query&nbsp;(to&nbsp;see&nbsp;how&nbsp;many&nbsp;rows&nbsp;are&nbsp;updated)
+<br />//&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;can&nbsp;be&nbsp;used&nbsp;after&nbsp;SELECT&nbsp;query&nbsp;(to&nbsp;see&nbsp;how&nbsp;many&nbsp;rows&nbsp;will&nbsp;be&nbsp;returned)
+
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;name&nbsp;FROM&nbsp;"</span><span style="color: #007700">.&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre&nbsp;</span><span style="color: #007700">.</span><span style="color: #DD0000">"medical&nbsp;WHERE&nbsp;wtype='1'"</span><span style="color: #007700">;
+<br />
+
+<br /></span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);&nbsp;
+<br />
+<br />if(</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">affected_rows&nbsp;</span><span style="color: #007700">&gt;&nbsp;</span><span style="color: #0000BB">0</span><span style="color: #007700">){
+<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Success!"</span><span style="color: #007700">;
+
+<br />}
+<br />else{
+<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"Error:&nbsp;No&nbsp;record"</span><span style="color: #007700">;
+<br />}</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br />24<br />25<br />26<br />27<br />28<br />29<br />30<br />31<br />32<br />33<br />34<br />35<br />36<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;snippet&nbsp;of&nbsp;code&nbsp;to&nbsp;see&nbsp;if&nbsp;a&nbsp;user&nbsp;has&nbsp;downloaded&nbsp;too&nbsp;much
+<br />
+<br /></span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'download_limit'</span><span style="color: #007700">]&nbsp;=&nbsp;</span><span style="color: #0000BB">3</span><span style="color: #007700">;
+
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;check&nbsp;database&nbsp;for&nbsp;their&nbsp;IP
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;count(*)&nbsp;AS&nbsp;number&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"downloads
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;ip='$_SERVER[REMOTE_ADDR]'
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AND&nbsp;category='games'"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #0000BB">$iplocked&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_first</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;check&nbsp;to&nbsp;see&nbsp;if&nbsp;IP&nbsp;and/or&nbsp;cookie&nbsp;is&nbsp;over&nbsp;the&nbsp;limit
+
+<br /></span><span style="color: #007700">if(</span><span style="color: #0000BB">$iplocked</span><span style="color: #007700">[</span><span style="color: #DD0000">'number'</span><span style="color: #007700">]&nbsp;&gt;=&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'download_limit'</span><span style="color: #007700">]&nbsp;||&nbsp;
+<br /></span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">[</span><span style="color: #DD0000">'download_limit'</span><span style="color: #007700">]&nbsp;&gt;=&nbsp;</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'download_limit'</span><span style="color: #007700">]){
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"over&nbsp;user&nbsp;limit&nbsp;error"</span><span style="color: #007700">;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;YOU:&nbsp;exit&nbsp;or&nbsp;redirect&nbsp;them
+<br /></span><span style="color: #007700">}
+<br /></span><span style="color: #FF8000">//&nbsp;they're&nbsp;good&nbsp;to&nbsp;go.&nbsp;allow&nbsp;download
+
+<br /></span><span style="color: #007700">else{
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;insert&nbsp;their&nbsp;ip&nbsp;into&nbsp;database
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$data&nbsp;</span><span style="color: #007700">=&nbsp;array(</span><span style="color: #DD0000">'ip'</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">$_SERVER</span><span style="color: #007700">[</span><span style="color: #DD0000">'REMOTE_ADDR'</span><span style="color: #007700">],&nbsp;</span><span style="color: #DD0000">'time'</span><span style="color: #007700">=&gt;</span><span style="color: #0000BB">time</span><span style="color: #007700">(),&nbsp;</span><span style="color: #DD0000">'category'</span><span style="color: #007700">=&gt;</span><span style="color: #DD0000">"games"</span><span style="color: #007700">);
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_insert</span><span style="color: #007700">(</span><span style="color: #DD0000">"downloads"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);&nbsp;
+<br />
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;set&nbsp;a&nbsp;cookie&nbsp;too
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">setcookie</span><span style="color: #007700">(</span><span style="color: #DD0000">"download_limit"</span><span style="color: #007700">,&nbsp;(</span><span style="color: #0000BB">$_COOKIE</span><span style="color: #007700">[</span><span style="color: #DD0000">'download_limit'</span><span style="color: #007700">]+</span><span style="color: #0000BB">1</span><span style="color: #007700">),&nbsp;</span><span style="color: #0000BB">time</span><span style="color: #007700">()&nbsp;+&nbsp;</span><span style="color: #0000BB">24&nbsp;</span><span style="color: #007700">*&nbsp;</span><span style="color: #0000BB">3600</span><span style="color: #007700">);
+
+<br />
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;YOU:&nbsp;send&nbsp;the&nbsp;user&nbsp;to&nbsp;the&nbsp;file
+<br /></span><span style="color: #007700">}
+<br />
+<br />
+<br /></span><span style="color: #FF8000">//&nbsp;deletes&nbsp;"expired"&nbsp;entries&nbsp;each&nbsp;time&nbsp;script&nbsp;is&nbsp;run
+
+<br /></span><span style="color: #0000BB">$lockTime&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">time</span><span style="color: #007700">()-</span><span style="color: #0000BB">24</span><span style="color: #007700">*</span><span style="color: #0000BB">3600</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//&nbsp;24hrs
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"DELETE&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"downloads
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;category='games'
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AND&nbsp;time&nbsp;&lt;&nbsp;$lockTime"</span><span style="color: #007700">;
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #FF8000">//&nbsp;involved&nbsp;process&nbsp;getting&nbsp;certain&nbsp;"pages"&nbsp;of&nbsp;info&nbsp;from&nbsp;mysql&nbsp;using&nbsp;LIMIT
+<br /></span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'page'</span><span style="color: #007700">]=</span><span style="color: #0000BB">3</span><span style="color: #007700">;&nbsp;&nbsp;</span><span style="color: #FF8000">//current&nbsp;page&nbsp;to&nbsp;pull&nbsp;up
+
+<br /></span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'items'</span><span style="color: #007700">]=</span><span style="color: #0000BB">4</span><span style="color: #007700">;&nbsp;</span><span style="color: #FF8000">//items&nbsp;to&nbsp;display&nbsp;per&nbsp;page
+<br />
+<br />//if&nbsp;they&nbsp;are&nbsp;looking&nbsp;past&nbsp;page&nbsp;one,&nbsp;it's&nbsp;expired&nbsp;news
+
+<br />//&nbsp;&nbsp;get&nbsp;expired&nbsp;news,&nbsp;but&nbsp;the&nbsp;page&nbsp;of&nbsp;X&nbsp;'item'&nbsp;records&nbsp;specified&nbsp;above
+<br /></span><span style="color: #007700">if(</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'page'</span><span style="color: #007700">]&nbsp;&gt;&nbsp;</span><span style="color: #0000BB">1</span><span style="color: #007700">){
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;author,&nbsp;header,&nbsp;description&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"news
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;expires&nbsp;&lt;&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">"Y-n-j"</span><span style="color: #007700">).</span><span style="color: #DD0000">"
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER&nbsp;BY&nbsp;expires&nbsp;DESC,&nbsp;id&nbsp;DESC
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LIMIT&nbsp;"</span><span style="color: #007700">.((</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'page'</span><span style="color: #007700">]-</span><span style="color: #0000BB">1</span><span style="color: #007700">)*</span><span style="color: #0000BB">$config</span><span style="color: #007700">[</span><span style="color: #DD0000">'items'</span><span style="color: #007700">]).</span><span style="color: #DD0000">",$config[items]"</span><span style="color: #007700">;
+
+<br />}else{
+<br /></span><span style="color: #FF8000">//they&nbsp;are&nbsp;on&nbsp;page&nbsp;on&nbsp;(which&nbsp;displays&nbsp;all&nbsp;the&nbsp;"current"&nbsp;news)
+<br />//&nbsp;&nbsp;get&nbsp;that&nbsp;current&nbsp;news&nbsp;that&nbsp;hasn't&nbsp;expired&nbsp;yet
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;author,&nbsp;header,&nbsp;description&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"news
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;expires&nbsp;&gt;=&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">date</span><span style="color: #007700">(</span><span style="color: #DD0000">"Y-n-j"</span><span style="color: #007700">).</span><span style="color: #DD0000">"
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ORDER&nbsp;BY&nbsp;expires&nbsp;DESC,&nbsp;id&nbsp;DESC"</span><span style="color: #007700">;
+<br />}
+<br />
+<br /></span><span style="color: #0000BB">$newsRows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);
+
+<br />while&nbsp;(</span><span style="color: #0000BB">$newsRow&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$newsRows</span><span style="color: #007700">))&nbsp;{
+<br />&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #FF8000">//&nbsp;etc
+<br /></span><span style="color: #007700">}</span>
+</span>
+</code></div>
+
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"CREATE&nbsp;TABLE&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #0000BB">$table</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;(
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`id`&nbsp;smallint(6)&nbsp;NOT&nbsp;NULL&nbsp;auto_increment,
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`expires`&nbsp;date&nbsp;NOT&nbsp;NULL&nbsp;default&nbsp;'0000-00-00',&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`author`&nbsp;varchar(20)&nbsp;NOT&nbsp;NULL,&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`header`&nbsp;varchar(100)&nbsp;default&nbsp;NULL,&nbsp;
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`description`&nbsp;text,&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(id),
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;INDEX&nbsp;(expires)
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)"</span><span style="color: #007700">;
+<br />
+<br /></span><span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"CREATE&nbsp;TABLE&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #0000BB">$table</span><span style="color: #007700">.</span><span style="color: #DD0000">"&nbsp;(
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`user`&nbsp;varchar(20)&nbsp;NOT&nbsp;NULL&nbsp;default&nbsp;'',
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`pass`&nbsp;varchar(20)&nbsp;NOT&nbsp;NULL&nbsp;default&nbsp;'',
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`email`&nbsp;varchar(255)&nbsp;default&nbsp;NULL,
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`count`&nbsp;smallint(6)&nbsp;unsigned&nbsp;default&nbsp;'0',
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`html`&nbsp;enum('N','Y')&nbsp;NOT&nbsp;NULL&nbsp;default&nbsp;'N',&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PRIMARY&nbsp;KEY&nbsp;(user),
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;UNIQUE&nbsp;KEY&nbsp;user&nbsp;(user)
+<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)"</span><span style="color: #007700">;
+<br />
+
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB">$sql&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #DD0000">"SELECT&nbsp;a.auction_id,&nbsp;a.title,&nbsp;p.file,&nbsp;p.caption&nbsp;
+<br />&nbsp;&nbsp;&nbsp;&nbsp;FROM&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"auctions&nbsp;a
+
+<br />&nbsp;&nbsp;&nbsp;&nbsp;LEFT&nbsp;JOIN&nbsp;"</span><span style="color: #007700">.</span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">pre</span><span style="color: #007700">.</span><span style="color: #DD0000">"photos&nbsp;p&nbsp;on&nbsp;a.primary_photo_id&nbsp;=&nbsp;p.photo_id
+<br />&nbsp;&nbsp;&nbsp;&nbsp;WHERE&nbsp;a.featured&nbsp;=&nbsp;1"</span><span style="color: #007700">;
+
+<br />
+<br /></span><span style="color: #0000BB">$db</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_all_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$sql</span><span style="color: #007700">);</span>
+</span>
+</code></div>
+<br class="clear" />
+
+Code:</br><div class="linenum">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9<br />10<br />11<br />12<br />13<br />14<br />15<br />16<br />17<br />18<br />19<br />20<br />21<br />22<br />23<br />24<br />25<br />26<br />27<br />28<br />29<br />30<br />31<br /></div>
+
+<div class="linetext"><code><span style="color: #000000">
+<span style="color: #0000BB"></span><span style="color: #007700">require(</span><span style="color: #DD0000">"Database.class.php"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;creating&nbsp;and&nbsp;connecting&nbsp;to&nbsp;two&nbsp;database<br /></span><span style="color: #0000BB">$db_1&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Database</span><span style="color: #007700">(</span><span style="color: #DD0000">"localhost"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"user"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"pass"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"deadwood_public"</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db_2&nbsp;</span><span style="color: #007700">=&nbsp;new&nbsp;</span><span style="color: #0000BB">Database</span><span style="color: #007700">(</span><span style="color: #DD0000">"localhost"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"user"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"pass"</span><span style="color: #007700">,&nbsp;</span><span style="color: #DD0000">"deadwood_internal"</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;NOTE:&nbsp;this&nbsp;is&nbsp;the&nbsp;main&nbsp;difference<br />//&nbsp;when&nbsp;I&nbsp;connect&nbsp;using&nbsp;connect(true)&nbsp;it&nbsp;will&nbsp;force&nbsp;open&nbsp;a&nbsp;new&nbsp;connection<br />//&nbsp;otherwise&nbsp;connect()&nbsp;uses&nbsp;the&nbsp;existing&nbsp;connection&nbsp;if&nbsp;it&nbsp;contains&nbsp;the&nbsp;the&nbsp;same&nbsp;info<br /></span><span style="color: #0000BB">$db_1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db_2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">connect</span><span style="color: #007700">(</span><span style="color: #0000BB">true</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;insert&nbsp;data&nbsp;into&nbsp;both&nbsp;database<br /></span><span style="color: #0000BB">$data</span><span style="color: #007700">[</span><span style="color: #DD0000">'member_name'</span><span style="color: #007700">]=</span><span style="color: #DD0000">"John&nbsp;Smith"</span><span style="color: #007700">;<br /><br /></span><span style="color: #0000BB">$db_1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_insert</span><span style="color: #007700">(</span><span style="color: #DD0000">"members"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /></span><span style="color: #0000BB">$db_2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query_insert</span><span style="color: #007700">(</span><span style="color: #DD0000">"members"</span><span style="color: #007700">,&nbsp;</span><span style="color: #0000BB">$data</span><span style="color: #007700">);<br /><br /></span><span style="color: #FF8000">//&nbsp;close&nbsp;the&nbsp;second&nbsp;connection<br /></span><span style="color: #0000BB">$db_2</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">close</span><span style="color: #007700">();<br /><br /><br /></span><span style="color: #FF8000">//&nbsp;we&nbsp;can&nbsp;still&nbsp;run&nbsp;a&nbsp;query&nbsp;to&nbsp;the&nbsp;first&nbsp;connection<br /></span><span style="color: #0000BB">$rows&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db_1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">query</span><span style="color: #007700">(</span><span style="color: #DD0000">"SELECT&nbsp;*&nbsp;FROM&nbsp;members&nbsp;LIMIT&nbsp;0,5"</span><span style="color: #007700">);<br /><br />while(</span><span style="color: #0000BB">$row&nbsp;</span><span style="color: #007700">=&nbsp;</span><span style="color: #0000BB">$db_1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">fetch_array</span><span style="color: #007700">(</span><span style="color: #0000BB">$rows</span><span style="color: #007700">)){<br />&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;</span><span style="color: #DD0000">"&lt;pre&gt;"</span><span style="color: #007700">.</span><span style="color: #0000BB">print_r</span><span style="color: #007700">(</span><span style="color: #0000BB">$row</span><span style="color: #007700">,</span><span style="color: #0000BB">true</span><span style="color: #007700">).</span><span style="color: #DD0000">"&lt;/pre&gt;"</span><span style="color: #007700">;<br />}<br /><br /></span><span style="color: #FF8000">//&nbsp;close&nbsp;the&nbsp;first&nbsp;connection<br /></span><span style="color: #0000BB">$db_1</span><span style="color: #007700">-&gt;</span><span style="color: #0000BB">close</span><span style="color: #007700">();</span>
+
+</span>
+</code></div>
+<br class="clear" />
+
+
+
+And now because I'm lazy and tend to look here all the time myself when i need a reference.<br>
+
+<table style="border-collapse: collapse;" cellspacing="0">
+<tbody><tr>
+	<th class="debut">Data Type</th>
+	<th class="debut">Column Type</th>
+	<th class="debut">Range or Description</th>
+	<th class="debut">Storage</th>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">TinyInt</td>
+	<td class="entry">Signed values from <b>-128</b> to <b>127</b><br>Unsigned values from <b>0</b> to <b>255</b></td>
+
+	<td class="entry">1 byte</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">SmallInt</td>
+	<td class="entry">Signed values from <b>-32768</b> to <b>32767</b><br>Unsigned values from <b>0</b> to <b>65535</b></td>
+
+	<td class="entry">2 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">MediumInt</td>
+	<td class="entry">Signed values from <b>-8388608</b> to <b>8388607</b><br>Unsigned values from <b>0</b> to <b>16777215</b></td>
+
+	<td class="entry">3 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">Int</td>
+	<td class="entry">Signed values from <b>-2147683648</b> to <b>2147483647</b><br>Unsigned values from <b>0</b> to <b>4294967295</b></td>
+
+	<td class="entry">4 bytes</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">BigInt</td>
+	<td class="entry">Signed values from <b>-9223372036854775808</b> to <b>9223372036854775807</b><br>Unsigned values from <b>0</b> to <b>18446744073709551615</b></td>
+
+	<td class="entry">8 bytes</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">Float</td>
+	<td class="entry">Minimum non-zero values: 1.175494351E-38<br>Maximum non-zero values: 3.402823466E+38</td>
+	<td class="entry">4 bytes</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">Double Float</td>
+	<td class="entry">Minimum non-zero values: 2.2250738585072014E-308<br>Maximum non-zero values: 1.7976931348623157E+308</td>
+	<td class="entry">8 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 238, 255);">Numeric</td>
+	<td class="entry">Decimal</td>
+	<td class="entry">Varies</td>
+	<td class="entry">Maximum width + 2 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+
+	<td class="entry">Char</td>
+	<td class="entry">Range 1-255 characters</td>
+	<td class="entry">Always filled max width</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+	<td class="entry">VarChar</td>
+
+	<td class="entry">Range 1-255 characters</td>
+	<td class="entry">Length of string + 1 byte</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+	<td class="entry">TinyBlob, TinyText</td>
+	<td class="entry">Max length 255 characters</td>
+
+	<td class="entry">Length of string + 1 byte</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+	<td class="entry">Blob, Text</td>
+	<td class="entry">Max length 65535 characters (~64KB of text)</td>
+	<td class="entry">Length of string + 2 bytes</td>
+
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+	<td class="entry">MediumBlob, MediumText</td>
+	<td class="entry">Max length 16777216 characters (16MB of text)</td>
+	<td class="entry">Length of string + 3 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+	<td class="entry">LongBlob, LongText</td>
+	<td class="entry">Max length 4294967295 characters (4GB of text)</td>
+	<td class="entry">Length of string + 4 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+
+	<td class="entry">Enum <em>('value','value2',...)</em></td>
+	<td class="entry">String object that can have only one set of allowed values</td>
+	<td class="entry">1 or 2 bytes</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(255, 238, 238);">String</td>
+	<td class="entry">Set <em>('value','value2',...)</em></td>
+
+	<td class="entry">String object that can have one or many values of a set of allowed values.</td>
+	<td class="entry">1, 2, 3, 4, or 8 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 255, 238);">Date/Time</td>
+	<td class="entry">Date</td>
+	<td class="entry">'YY-MM-DD', 'YYYY-MM-DD', 'YYMMDD'<br>Range "1000-01-01" to "9999-12-31"</td>
+
+	<td class="entry">3 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 255, 238);">Date/Time</td>
+	<td class="entry">Time</td>
+	<td class="entry">'HH:MM:SS', 'HHMMSS', 'HHMM', 'HH'<br>Range "-838:59:59" to "838:59:59"</td>
+	<td class="entry">3 bytes</td></tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 255, 238);">Date/Time</td>
+	<td class="entry">DateTime</td>
+	<td class="entry">'YYYY-MM-DD HH:MM:SS'<br>"0000-01-01 00:00:00" to "9999-12-31 23:59:59"</td>
+	<td class="entry">8 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 255, 238);">Date/Time</td>
+	<td class="entry">TimeStamp</td>
+	<td class="entry">19700101000000 to sometime in the year 2037</td>
+	<td class="entry">4 bytes</td>
+</tr>
+
+<tr>
+	<td class="entry" style="background-color: rgb(238, 255, 238);">Date/Time</td>
+
+	<td class="entry">Year</td>
+	<td class="entry">'YYYY', 'YY' Range "1901" to "2155"</td>
+	<td class="entry">1 byte</td>
+</tr>
+</tbody></table>
+</div>
+
+
+<!-- END main content -->
+</div>
+
+
+
+</body>
+</html>

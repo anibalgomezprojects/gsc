@@ -1,0 +1,4 @@
+/* place css fixes for all versions of IE in this conditional comment */
+.thrColLiqHdr #sidebar2, .thrColLiqHdr #sidebar1 { padding-top: 30px; }
+.thrColLiqHdr #mainContent { zoom: 1; padding-top: 15px; }
+/* the above proprietary zoom property gives IE the hasLayout it needs to avoid several bugs */

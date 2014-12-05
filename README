@@ -1,0 +1,106 @@
+HOWTO INSTALL GOMEZ SHOPPING CART
+_____________
+
+1. Run shop.sql on phpMyAdmin.
+2. Edit config.inc.php and save it.
+3. Open your FTP Client and up files!
+4. Go to your Admin Control Panel and login -> www.yourdomain.com/gsc/admin/
+
+   - Default Login Settings:
+
+     - Username: admin
+     - Pass: 123456
+
+   *** Important Note: When your are logged change your default password ***
+
+ LINUX SERVER PERMISSIONS
+
+ Set chmod 777 to /gallery dir
+ 
+ Example:
+
+ - root@lastprophet:/opt/lampp# cd ./htdocs
+ - root@lastprophet:/opt/lampp/htdocs# cd ./gsc
+ - root@lastprophet:/opt/lampp/htdocs/gsc# chmod 777 gallery
+
+Enjoy!
+_____________
+
+GOMEZ SHOPPING CAR
+_____________
+
+The first version of GSC was maded for easy integration to any website and for web designers submited to planet-source-code's community. I made this program for my "personal website's" and i post it.
+The v2.0 continue the history and now back, "Full Administration", "Templatable", "Easy and Fast". is described the second version of this project
+
+_____________
+HOW DO I TO INCLUDE MY OWN TEMPLATES?
+_____________
+
+GSC V2.0 was designed for easy template integration too.
+Paste your templates to 'templates' folder and link 'gsc.css' in to your template. Import The General Headers
+
+Inside <head> label:
+
+<!-- GENERAL HEADERS EXAMPLE -->
+<link href="templates/YOURTHEME/gsc.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="templates/YOUTHEME/wordcloud.css" type="text/css"> 
+<!-- GENERAL HEADERS EXAMPLE -->
+
+We need 6 functions in our templates:
+
+Inside <body> label:
+
+Show Links <?php links(); ?>
+Show Basket <?php basket(); ?>
+Product List <?php shop(); ?>
+Show Categories <?php categories(); ?>
+Closing The Document <?php footer(); ?>
+
+Optional (Tag Clouds)
+For Search Enginee's <?php tags(); ?>
+
+Easy Right?
+_____________
+
+CHANGELOG
+_____________
+
+v2.0 was maded for full administration (Code Rewrited)
+
+* PS_Pagination Class Compatible with SEO
+* Buy As Guest User
+* Nice Form Moved to 'forms' dir in the templates folder
+* Added SEO URL's
+* Credit Card Validation
+* Added Tag Clouds (Bug Fixed in Tag Cloud Class)
+* Added PHP ajax Login form using Jquery (www.chazzuka.com/blog)
+* Ajax Forms (nice forms theme www.emblematiq.com/projects/niceforms)
+* XHTML Templates Added
+* Template system
+* Blog Added
+* Categories Support
+* PHP MySQL DB wrapper Fix
+* Added DB tbl settings
+* Full Admin Control Panel
+
+V1.0 was maded for easy integration to any website and for web designers.
+
+* First BETA version
+* PHP Image Thumbs (PHP GD Lib enabled required)
+* Products Pagination Class
+* PHP MySQL DB wrapper
+
+_____________
+
+REQUIREMENTS
+_____________
+
+PHP => 4.x
+Apache mod_rewrite (if admin settings have SEO URLs ON if not set SEO to OFF)
+PHP GD Library
+1 MySQL Database
+______________________
+www.gomezstudio.com
+staff@gomezstudio.com
+personal and friendly contact: lost_prophets_law@hotmail.com
+______________________

@@ -1,0 +1,79 @@
+/*
+* Gomez Shopping Cart StyleSheet
+*/
+img {
+border: 0;
+}
+.nadd {
+	background-color: #F0F0F0;
+	text-align: center;
+	border: 1px solid #DDD5D5;
+}
+.button {
+	width: 100%;
+	background-color: #666666;
+	border: 1px solid #666666;
+	text-align: right;
+}
+.price {
+	width: 100%;
+	background-color: #F0F0FF;
+	text-align: right;
+	font-weight: bold;
+}
+.price p {
+	margin-right: 10px;
+}
+.thumb {
+	float: left;
+	width: 100%;
+	background-color: #F0F0F0;
+	text-align: center;
+	border: 1px solid #DDD5D5;
+}
+.phototitle {
+	font-size: 9pt;
+}
+.navbar p {
+	margin-left: 10px;
+	margin-top: 10em;
+	padding-top: 10px;
+}
+.ID {
+	font: 8pt;
+	text-align: right;
+	color: #c0c0c0;
+	
+}
+.ID p {
+	margin-right: 10px;
+}
+#basket {
+	background-image: url(images/basket.gif);
+	width: 170px;
+	height: 125px;
+	padding-top: 40px;
+	background-repeat: no-repeat;
+}
+
+.stock {
+	float: left;
+	width: 80%;
+	background-color: #F0F0F0;
+	text-align: center;
+
+}
+.stock_price {
+	background-color: #F0F0FF;
+	text-align: center;
+	font-weight: bold;
+}
+.wrong {
+	color: #F00;
+	font-weight: bold;
+}
+.ok {
+	color: #090;
+	font-weight: bold;
+}
+
